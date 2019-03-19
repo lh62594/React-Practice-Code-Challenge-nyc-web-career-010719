@@ -1,32 +1,51 @@
-import React, { Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 
-const Table = (props) => {
+class Table extends Component {
+  state = {
+    money: ''
+  }
 
-  const renderPlates = (array) => {
-    return array.map((x, index) => {
-      return <div className="empty-plate" style={{ top: -7 * index }}/>
+  renderPlates = () => {
+    return this.props.sushiEaten.map((x, index) => {
+      return <div key={index} className="empty-plate" style={{ top: -7 * index }}/>
     })
   }
 
-  return (
-    <Fragment>
-      <h1 className="remaining">
-        You have: ${ /* Give me how much money I have left */ } remaining!
-      </h1>
-      <div className="table">
-        <div className="stack">
-          {
-            /* 
-               renderPlates takes an array 
-               and renders an empty plate
-               for every element in the array
-            */
-            renderPlates([])
-          }
+  handleChange = (e) => {
+    this.setState({ money: e.target.value })
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    this.props.addMoney(this.state.money)
+    this.setState({ money: '' })
+  }
+
+  render() {
+    // console.log(this.state.money);
+    return (
+      <Fragment>
+        <h1 className="remaining">
+          You have: ${this.props.wallet} remaining!
+        </h1>
+        <div className="table">
+          <div className="stack">
+            {
+              this.renderPlates()
+            }
+          </div>
         </div>
-      </div>
-    </Fragment>
-  )
+
+        <form className="form" onSubmit={this.handleSubmit}>
+          <label>Add money to your wallet!</label>
+          <br />
+          <input onChange={(e) => this.handleChange(e)} name="money" value={this.state.money}/>
+          <input type="submit" />
+        </form>
+
+      </Fragment>
+    )
+  }
 }
 
 export default Table
